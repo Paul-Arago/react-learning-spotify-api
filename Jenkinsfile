@@ -1,6 +1,20 @@
 pipeline {
-    agent any
+    
+    agent {
+        docker {
+            image 'node:22'
+        }
+    }
+
     stages {
+
+        stage('Environment') {
+            steps {
+                sh 'node --version'
+                sh 'npm --version'
+            }
+        }
+
         stage('Install dependencies') {
             steps {
                 sh 'npm ci'
