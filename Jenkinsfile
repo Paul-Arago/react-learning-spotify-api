@@ -1,9 +1,21 @@
 pipeline {
     agent any
     stages {
-        stage('Stage 1') {
+        stage('Install dependencies') {
             steps {
-                echo 'Hello React !'
+                sh 'npm ci'
+            }
+        }
+
+        stage('Run tests') {
+            steps {
+                sh 'npm test'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh 'npm run build'
             }
         }
     }
