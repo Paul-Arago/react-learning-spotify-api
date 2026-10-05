@@ -1,1 +1,1 @@
-# react-learning-spotify-api
+# fastapi-learning-spotify-api
