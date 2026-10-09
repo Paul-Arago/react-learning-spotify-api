@@ -36,8 +36,7 @@ function PlaylistsDisplay() {
             <h1>Mes playlists</h1>
             {error && <p>{error}</p>}
             {
-                playlists.map((playlist) => ( 
-                    console.log('Playlist:', playlist),
+                playlists.map((playlist) => (
                     <Playlist key={playlist.id} playlist={playlist} />
                 ))
             }

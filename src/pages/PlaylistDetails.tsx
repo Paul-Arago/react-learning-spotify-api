@@ -1,16 +1,17 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getPlaylistDetails } from "../services/playlistService";
-import type { IPlaylist, ITrack } from "../types/Playlist";
+import type { IPlaylist, IPlaylistItem } from "../types/Playlist";
 import Playlist from "../components/Playlist";
-import { getTracks } from "../services/trackService";   
+import { getTracks } from "../services/trackService";
+import './PlaylistDetails.css';
 
 function PlaylistDetails() {
     const { id } = useParams();
     const [playlistDetails, setPlaylistDetails] = useState<IPlaylist | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [tracks, setTracks] = useState<ITrack[]>([]);
+    const [tracks, setTracks] = useState<IPlaylistItem[]>([]);
 
     const loadPlaylistDetails = async () => {
             if (!id) {
@@ -37,7 +38,7 @@ function PlaylistDetails() {
         }
         try {
             const tracksData = await getTracks(id);
-            setTracks(tracksData);
+            setTracks(tracksData.items);
         } catch (error) {
             console.error(error);
             setError("Impossible de récupérer les pistes");
@@ -67,10 +68,41 @@ function PlaylistDetails() {
         <>
             <Playlist playlist={playlistDetails} />
             <div>
-                <h2>Pistes</h2>
-                <ul>
-                    {tracks.map((track) => <li key={track.id}>{track.name}</li>)}
-                </ul>
+                <table className="trackTable">
+                    <thead>
+                        <tr>
+                            <th scope="col">Nom</th>
+                            <th scope="col">Artiste</th>
+                            <th scope="col">Durée</th>
+                            <th scope="col">Album</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody> 
+                        {tracks.map((item) => ( 
+                            <tr key={item.track.id}> 
+                                <td> 
+                                    <div className="trackInfo"> 
+                                        <img className="TrackImage" src={item.track.album.images[0]?.url} alt={`Pochette de ${item.track.album.name}`} /> 
+                                        <span className="trackName"> {item.track.name} </span> 
+                                    </div>
+                                </td> 
+                                <td> 
+                                    {item.track.artists.map((artist) => artist.name).join(", ")} 
+                                </td> 
+                                <td> 
+                                    {Math.floor(item.track.duration_ms / 60000)}: {String( Math.floor( (item.track.duration_ms % 60000) / 1000 ) ).padStart(2, "0")} 
+                                </td> 
+                                <td>
+                                    {item.track.album.name}
+                                </td> 
+                                <td> 
+                                    <button>Supprimer</button>
+                                </td> 
+                            </tr> 
+                        ))}
+                    </tbody>
+                </table>
             </div>
         </>
     );

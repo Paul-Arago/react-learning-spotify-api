@@ -1,8 +1,8 @@
-import type { ITrack } from "../types/Playlist";
+import type { IPlaylistTracks } from "../types/Playlist";
 
 const API_URL = 'http://127.0.0.1:8000'
 
-export async function getTracks(playlistId: string): Promise<ITrack[]> {
+export async function getTracks(playlistId: string): Promise<IPlaylistTracks> {
     const response = await fetch(`${API_URL}/playlists/${playlistId}/tracks`);
 
     if (!response.ok) {
